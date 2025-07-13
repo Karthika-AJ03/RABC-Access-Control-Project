@@ -1,0 +1,90 @@
+import random
+import string
+
+# In-memory user database
+users = []
+
+# Generate random temporary password
+def generate_temp_password(length=10):
+    characters = string.ascii_letters + string.digits + "@#"
+    return ''.join(random.choice(characters) for _ in range(length))
+
+# 1. Onboard a New User
+def onboard_user():
+    name = input("Enter employee name: ")
+    role = input("Enter role (HR/IT/Finance): ").strip()
+    temp_pass = generate_temp_password()
+
+    user = {
+        "name": name,
+        "role": role,
+        "status": "active",
+        "password": temp_pass
+    }
+
+    users.append(user)
+    print(f"\n✅ User '{name}' onboarded successfully!")
+    print(f"➡️ Role: {role}")
+    print(f"🔐 Temporary Password: {temp_pass}\n")
+
+# 2. View All Users
+def view_users():
+    if not users:
+        print("\n⚠️ No users found.\n")
+        return
+
+    print("\n📋 List of Users:")
+    for idx, user in enumerate(users, start=1):
+        print(f"{idx}. Name: {user['name']} | Role: {user['role']} | Status: {user['status']}")
+    print("")
+
+# 3. Reset Password
+def reset_password():
+    name = input("Enter the user’s name to reset password: ").strip()
+    for user in users:
+        if user['name'].lower() == name.lower():
+            new_pass = generate_temp_password()
+            user['password'] = new_pass
+            print(f"\n🔄 Password reset successful! New Password: {new_pass}\n")
+            return
+    print("\n❌ User not found.\n")
+
+# 4. Deactivate User
+def deactivate_user():
+    name = input("Enter the user’s name to deactivate: ").strip()
+    for user in users:
+        if user['name'].lower() == name.lower() and user['status'] == "active":
+            user['status'] = "inactive"
+            print(f"\n🚫 User '{name}' deactivated successfully.\n")
+            return
+    print("\n❌ Active user not found.\n")
+
+# 5. IAM Main Menu
+def iam_menu():
+    while True:
+        print("🛡️ IAM User Lifecycle Management")
+        print("--------------------------------")
+        print("1. Onboard New User")
+        print("2. View All Users")
+        print("3. Reset User Password")
+        print("4. Deactivate User")
+        print("5. Exit Program")
+
+        choice = input("\nEnter your choice (1–5): ").strip()
+
+        if choice == '1':
+            onboard_user()
+        elif choice == '2':
+            view_users()
+        elif choice == '3':
+            reset_password()
+        elif choice == '4':
+            deactivate_user()
+        elif choice == '5':
+            print("\n👋 Exiting IAM System. Bye!")
+            break
+        else:
+            print("\n❌ Invalid choice. Please try again.\n")
+
+# 🔁 Run the IAM system
+iam_menu()
